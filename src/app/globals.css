@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f4f6f8;
+  --background-secondary: #ffffff;
+  --foreground: #0f0f14;
+  --primary: #fe9a05;
+  --primary-foreground: #ffffff;
+  --primary-dark: #bf7608;
+  --primary-secondary: #ff6b76;
+  --primary-tertiary: #ffa7a9;
+  --primary-quanternary: #ffeeed;
+  --primary-fifth: #44494e;
+  --stroke-line: #c4ccd7;
+  --stroke-border: #d9d9df;
+  --label-paragraph: #30363c;
+  --label-caption: #94a3b8;
+  --accent: #d8eefb;
+  --accent-foreground: #0f0f14;
+  --negative: #ef515a;
+  --negative-dark: #c22b32;
+  --positive: #00c287;
+}
+
+.dark {
+  --background: #313437;
+  --background-secondary: #44494e;
+  --foreground: #ffffff;
+  --primary: #fe9a05;
+  --primary-foreground: #ffffff;
+  --primary-dark: #bf7608;
+  --primary-secondary: #ff6b76;
+  --primary-tertiary: #ffa7a9;
+  --primary-quanternary: #ffeeed;
+  --primary-fifth: #ffffff;
+  --stroke-line: #c4ccd7;
+  --stroke-border: #d9d9df;
+  --label-paragraph: #9eacbf;
+  --label-caption: #94a3b8;
+  --accent: #d8eefb;
+  --accent-foreground: #0f0f14;
+  --negative: #ef515a;
+  --negative-dark: #d1434a;
+  --positive: #00c287;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-secondary: var(--primary-secondary);
+  --color-primary-tertiary: var(--primary-tertiary);
+  --color-primary-quanternary: var(--primary-quanternary);
+  --color-primary-fifth: var(--primary-fifth);
+  --color-stroke-line: var(--stroke-line);
+  --color-stroke-border: var(--stroke-border);
+  --color-label-paragraph: var(--label-paragraph);
+  --color-label-caption: var(--label-caption);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-negative: var(--negative);
+  --color-negative-dark: var(--negative-dark);
+  --color-positive: var(--positive);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sf-pro-rounded), Arial, Helvetica, sans-serif;
+}
+@layer components {
+  .profileHeader {
+    @apply text-[32px] font-extrabold leading-9;
+  }
+  .h1 {
+    @apply text-[26px] font-bold leading-9;
+  }
+  .h2 {
+    @apply text-[24px] font-bold leading-8;
+  }
+  .h3 {
+    @apply text-[20px] font-bold leading-7;
+  }
+  .largeButton {
+    @apply text-sm font-bold leading-5;
+  }
+  .mediumButton {
+    @apply text-sm font-medium leading-5;
+  }
+  .smallButton {
+    @apply text-xs font-bold leading-5;
+  }
+  .title {
+    @apply text-[18px] font-extrabold leading-6;
+  }
+  .subTitle {
+    @apply text-base font-semibold leading-[22px];
+  }
+  .paragraphText {
+    @apply text-sm font-normal leading-5;
+  }
+  .captionText {
+    @apply text-[10px] font-normal leading-5;
+  }
+  .largeInput {
+    @apply text-base font-bold leading-5;
+  }
+  .smallInput {
+    @apply text-sm font-semibold leading-[18px];
+  }
+}
