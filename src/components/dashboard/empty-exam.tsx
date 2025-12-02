@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { ExamItem } from "@/lib/types";
 import { examMetadata } from "@/actions";
 import ExamTestBankModal from "../exam/exam-bank-modal";
+import QuestionCountModal from "../exam/question-count-modal";
 import TeacherCreateExam from "../exam/teacher-create-exam";
 
 interface EmptyExamProps {
@@ -26,6 +27,8 @@ const EmptyExam: React.FC<EmptyExamProps> = ({
   const { id } = useParams();
   const searchParams = useSearchParams();
   const [examMetaData, setExamMetaData] = useState<ExamItem | null>(null);
+  const [showTeacherExam, setShowTeacherExam] = useState(false);
+  const [counts, setCounts] = useState({ choose: 0, fill: 0 });
 
   const fetchExam = useCallback(async () => {
     try {
@@ -54,9 +57,8 @@ const EmptyExam: React.FC<EmptyExamProps> = ({
   }, [id, searchParams, fetchExam]);
 
   const examType = examMetaData?.type;
-  const variantNumber = activeTab.charCodeAt(0) - 65 + 1;
 
-  const [selectedVariant, setSelectedVariant] = useState(variantNumber);
+  const variantNumber = activeTab.charCodeAt(0) - 65 + 1;
 
   return (
     <div className="flex flex-col items-center text-center p-5 w-[300px] space-y-2">
@@ -89,7 +91,6 @@ const EmptyExam: React.FC<EmptyExamProps> = ({
           variant="secondary"
           className="w-full"
           onClick={() => {
-            setSelectedVariant(variantNumber);
             setIsTestBankOpen(true);
           }}
         >
@@ -98,7 +99,12 @@ const EmptyExam: React.FC<EmptyExamProps> = ({
         </Button>
       )}
       {examType === "TEACHER_LIBRARY" && (
-        <Button className="w-full" onClick={() => setIsTeacherLib(true)}>
+        <Button
+          className="w-full"
+          onClick={() => {
+            setIsTeacherLib(true);
+          }}
+        >
           <Database className="mr-2" />
           Багш тест үүсгэх
         </Button>
@@ -116,18 +122,31 @@ const EmptyExam: React.FC<EmptyExamProps> = ({
         <ExamTestBankModal
           isOpen={isTestBankOpen}
           examId={examId}
-          variant={String(selectedVariant)}
+          variant={String(variantNumber)}
           onClose={() => setIsTestBankOpen(false)}
         />
       )}
-      {/* ✅ examMetaData null биш эсэхийг шалгах */}
       {isTeacherLib && examMetaData && (
+        <QuestionCountModal
+          onClose={() => setIsTeacherLib(false)}
+          examMetaData={examMetaData}
+          onSuccess={(choose, fill) => {
+            setIsTeacherLib(false);
+            setShowTeacherExam(true);
+            setCounts({ choose, fill });
+          }}
+        />
+      )}
+      {showTeacherExam && examMetaData && (
         <TeacherCreateExam
-          key={examMetaData.questionCount}
+          key={`teacher-exam-${variantNumber}`}
           examId={examId}
           examMetaData={examMetaData}
-          onClose={() => setIsTeacherLib(false)}
+          chooseCount={counts.choose}
+          fillCount={counts.fill}
+          onClose={() => setShowTeacherExam(false)}
           onSuccess={onSuccess}
+          variant={variantNumber}
         />
       )}
     </div>

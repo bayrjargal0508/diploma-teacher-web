@@ -3,7 +3,7 @@ import { connectDB } from "../../../../db";
 import ExamQuestion from "../../../../models/ExamQuestion";
 
 export async function POST(req: Request) {
-  console.log("📌 API called"); // debug
+  console.log("📌 API called");
 
   try {
     await connectDB();
@@ -17,22 +17,26 @@ export async function POST(req: Request) {
       );
     }
 
+    // хуучин асуултуудыг устгана
     await ExamQuestion.deleteMany({ examId });
 
+    // шинэ асуултуудыг форматлана
     const formatted = questions.map((q: any) => ({
       examId,
       question: q.question,
       answers: q.answers,
     }));
 
+    // mongoDB руу бичих
     await ExamQuestion.insertMany(formatted);
 
     return NextResponse.json(
-      { message: "OK" },
+      { success: true, message: "Асуултууд амжилттай хадгалагдлаа" },
       { status: 200 }
     );
+
   } catch (error) {
-    console.error(error);
+    console.error("❌ API Error:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

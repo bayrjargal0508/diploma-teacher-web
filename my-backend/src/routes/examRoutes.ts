@@ -1,7 +1,19 @@
-// import express from "express";
+import express from "express";
+import {
+  createQuestions,
+  deleteQuestion,
+  getQuestions,
+} from "../controllers/examController";
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post("/api/exams/questions", createQuestion);
+// CREATE questions
+router.post("/api/exams/questions", createQuestions);
 
-// export default router;
+// GET questions
+router.get("/api/exams/questions", getQuestions);
+
+// DELETE question
+router.delete("/api/exams/questions/:id", deleteQuestion);
+
+export default router;

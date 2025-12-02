@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { ExamItem } from "@/lib/types";
 import { useState } from "react";
 import ExamShuffleModal from "../exam/exam-shuffle";
+import TeacherCreateExam from "../exam/teacher-create-exam";
 import { SidebarTrigger } from "../providers/sidebar-provider";
 import TimeIcon from "../icons/time-icon";
 import BookQueue from "../icons/book-queue.";
@@ -13,19 +14,31 @@ import VariantIcon from "../icons/variant-icon";
 interface ExamSidebarProps {
   exam: ExamItem | null;
   Id: string;
+  teacherQuestionCount?: number;
+  onTeacherQuestionsSaved?: () => void;
 }
 const ExamSidebar: React.FC<ExamSidebarProps> = ({
   exam,
   Id,
+  teacherQuestionCount,
+  onTeacherQuestionsSaved,
 }: ExamSidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isTeacherLibOpen, setIsTeacherLibOpen] = useState(false);
   if (!exam) {
     return <div></div>;
   }
+  const remainingTeacherQuestions = Math.max(
+    0,
+    (exam.questionCount ?? 0) - (teacherQuestionCount ?? 0)
+  );
   const infoRows = [
     {
       label: "Асуултын тоо",
-      value: exam.questionCount,
+      value:
+        exam.type === "TEACHER_LIBRARY"
+          ? remainingTeacherQuestions
+          : exam.questionCount,
       icon: <BookQueue size={16} />,
     },
     { label: "Хугацаа", value: exam.duration, icon: <TimeIcon /> },
@@ -101,13 +114,23 @@ const ExamSidebar: React.FC<ExamSidebarProps> = ({
           </div>
         )}
 
-        {exam.type !== "YESH_LIBRARY" && (
+        {exam.type == "SHUFFLE" && (
           <Button
             variant="secondary"
             className="w-full"
             onClick={() => setIsOpen(true)}
           >
             Асуулт үүсгэх
+          </Button>
+        )}
+        {exam.type == "TEACHER_LIBRARY" && (
+          <Button
+            variant="secondary"
+            className="w-full"
+            disabled={remainingTeacherQuestions <= 0}
+            onClick={() => setIsTeacherLibOpen(true)}
+          >
+            Асуулт нэмэх
           </Button>
         )}
       </div>
@@ -122,6 +145,22 @@ const ExamSidebar: React.FC<ExamSidebarProps> = ({
         examId={Id}
         examMetaData={exam}
       />
+      {isTeacherLibOpen && (
+        <TeacherCreateExam
+          examId={Id}
+          examMetaData={exam}
+          onClose={() => setIsTeacherLibOpen(false)}
+          onSuccess={() => {
+            setIsTeacherLibOpen(false);
+            onTeacherQuestionsSaved?.();
+          }}
+          variant={exam.variantCount}
+          questionCount={remainingTeacherQuestions}
+          // zasna
+          chooseCount={exam.variantCount}
+          fillCount={exam.variantCount}
+        />
+      )}
     </aside>
   );
 };

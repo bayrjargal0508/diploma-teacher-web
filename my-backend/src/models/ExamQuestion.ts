@@ -8,8 +8,13 @@ const answerSchema = new Schema({
 const questionSchema = new Schema({
   examId: { type: String, required: true },
   question: { type: String, required: true },
+  score: { type: Number, default: 0 },
+  questionType: { type: String, default: "" },
+  knowledgeId: { type: String, default: "" },
+  contentId: { type: String, default: "" },
+  variant: { type: Number, default: 1 },
   answers: { type: [answerSchema], required: true },
 });
 
-export default mongoose.models.ExamQuestion ||
+export default (mongoose.models.ExamQuestion as mongoose.Model<any>) ||
   mongoose.model("ExamQuestion", questionSchema);
