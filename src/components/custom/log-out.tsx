@@ -35,7 +35,7 @@ const LogoutConfirmModal: FC<LogoutConfirmModalProps> = ({
             height={120}
           />
         </div>
-        <div className="flex justify-center gap-3 mt-4 w-full">
+        <div className="flex justify-between gap-3 mt-4 w-full">
           <Button variant="secondary" onClick={onCancel} className="w-40">
             Үгүй
           </Button>

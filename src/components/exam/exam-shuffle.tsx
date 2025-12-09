@@ -84,7 +84,7 @@ export default function ExamShuffleModal({
           : [];
         setShuffleContent(contentData);
       } catch (error) {
-        console.error("Алдаа bchdcbdhb:", error);
+        console.error("Алдаа:", error);
       } finally {
         setLoading(false);
       }

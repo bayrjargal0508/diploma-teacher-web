@@ -150,6 +150,12 @@ const AppSidebar = () => {
               href="/dashboard/archive"
               onClick={() => handleNavigation("/dashboard/archive", "Архив")}
             />
+             <MenuItem
+              src="/assets/photos/chest-icon.png"
+              label="Даалгавар"
+              href="/dashboard/assign"
+              onClick={() => handleNavigation("/dashboard/assign", "Даалгавар")}
+            />
           </div>
 
           <div className="mt-auto flex flex-col items-start gap-5">

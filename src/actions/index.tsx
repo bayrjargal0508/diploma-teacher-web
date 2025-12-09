@@ -534,6 +534,14 @@ const totalScore = async (classroomId: string) => {
     return null;
   }
 };
+// shuffle exam content
+const examShuffleContentNoId = async () => {
+  const response = await fetchUtils.get<ExamContent>(
+    `${TEACHER_API_URL}/api/exam/question/shuffle-content?examMetadataId=6937ae31e6987b6e98033455`,
+    true
+  );
+  return response;
+};
 
 export {
   login,
@@ -577,4 +585,5 @@ export {
   examVarient,
   classroomExamCount,
   totalScore,
+  examShuffleContentNoId,
 };

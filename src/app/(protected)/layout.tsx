@@ -5,10 +5,11 @@ import { SidebarProvider } from "@/components/providers/sidebar-provider";
 import { TitleProvider } from "@/components/providers/title-provider";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { ExamTotalProvider } from "@/components/providers/exam-total";
 
 const ProtectedLayout = async ({ children }: { children: ReactNode }) => {
   const isLogged = await isAuthenticated();
-  
+
   if (!isLogged) {
     redirect("/login");
   }
@@ -20,9 +21,11 @@ const ProtectedLayout = async ({ children }: { children: ReactNode }) => {
     <SidebarProvider>
       <TitleProvider>
         <ClassroomRefreshProvider>
-          <ProtectedLayoutContent fullName={fullName}>
-            {children}
-          </ProtectedLayoutContent>
+          <ExamTotalProvider>
+            <ProtectedLayoutContent fullName={fullName}>
+              {children}
+            </ProtectedLayoutContent>
+          </ExamTotalProvider>
         </ClassroomRefreshProvider>
       </TitleProvider>
     </SidebarProvider>

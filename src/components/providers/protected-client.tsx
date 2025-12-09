@@ -17,15 +17,16 @@ const ProtectedLayoutContent = ({
   const { title } = useTitleContext();
 
   return (
-    <div className="flex h-full bg-background-secondary w-full">
+    <div className="flex min:h-screen bg-background-secondary w-full">
       <AppSidebar />
-      <div className="p-2.5 space-y-2.5 flex-1">
-        <div className="bg-background-secondary sticky top-2.5 z-50 pb-1 ">
+      <div className="flex-1 space-y-3 overflow-visible">
+        <div className="sticky top-0 z-50 bg-background-secondary pt-3">
           <div className="bg-background rounded-[10px] px-5 py-2.5 flex gap-2.5 justify-between">
             <div className="flex items-center gap-2.5">
               <SidebarTrigger />
               <h1 className="text-lg font-extrabold">{title}</h1>
             </div>
+
             <div className="flex items-center gap-2.5">
               <ThemeModeToggle />
               <Button
@@ -41,10 +42,11 @@ const ProtectedLayoutContent = ({
                   className="object-contain size-6"
                 />
               </Button>
-              <span className="ml-2 subTitle">{fullName}</span>
+              <span className="ml-2 subTitle mt-3">{fullName}</span>
             </div>
           </div>
         </div>
+
         <div className="@container/contents">{children}</div>
       </div>
     </div>

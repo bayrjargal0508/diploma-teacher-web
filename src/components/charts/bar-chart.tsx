@@ -32,7 +32,7 @@ export default function AvgScoreChart({ data }: AvgScoreChartProps) {
         </select>
       </div>
 
-      <ResponsiveContainer width="100%" height={420}>
+      <ResponsiveContainer width="100%" height={320}>
         <BarChart data={data}>
           <XAxis dataKey="name" />
           <YAxis />

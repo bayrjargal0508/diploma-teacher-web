@@ -8,8 +8,14 @@ import { Button } from "../ui/button";
 import { editClassroom, generateInvitationCode } from "@/actions";
 import { toast } from "react-toastify";
 import QRCode from "qrcode";
-import { LinkIcon } from "lucide-react";
-
+import { ChevronDown, LinkIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Textarea } from "../ui/textarea";
 interface SettingTabProps {
   id: string;
   invitationCode: string;
@@ -32,11 +38,13 @@ export const SettingTab = ({
   classnumber,
 }: SettingTabProps) => {
   const [currentalias, setCurrentAlias] = useState(alias);
-  const [currentclassnumber, setCurrentClassnumber] = useState(classnumber);
+  const [currentclassnumber, setCurrentClassnumber] = useState(classnumber | 12);
   const [currentdescription, setCurrentDescription] = useState(description);
   const [studentCount] = useState(0);
   const [src, setSrc] = useState<string | null>(null);
   const [currentCode, setCurrentCode] = useState(invitationCode);
+
+  const classes = [8, 9, 10, 11, 12];
 
   const link = `https://yesh.mn/classroom/${currentCode}`;
 
@@ -90,8 +98,8 @@ export const SettingTab = ({
   };
 
   return (
-    <div className="flex items-start gap-5 w-full pb-5 h-screen">
-      <div className="bg-background-secondary text-[16px] font-semibold border w-full gap-5 border-[#D9D9DF] rounded-[10px] p-5 flex flex-col">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-5 sm:gap-4 w-full pb-5">
+      <div className="text-[16px] font-semibold w-full gap-5 flex flex-col rounded-[10px] border-[0.6px] border-b-4 border-stroke-border bg-background-secondary p-5">
         <p className="font-semibold flex gap-2.5">
           <Editicon /> Ангийн мэдээлэл
         </p>
@@ -107,26 +115,50 @@ export const SettingTab = ({
 
         <div className="relative">
           <label className="text-label-secondary">Анги сонгох</label>
-          <select
-            title="class"
-            className="w-full h-10 border rounded-lg px-4 text-base text-label-caption hover:border-primary focus:border-primary"
-            value={currentclassnumber}
-            onChange={(e) => setCurrentClassnumber(Number(e.target.value))}
-          >
-            {[8, 9, 10, 11, 12].map((num) => (
-              <option key={num} value={num}>
-                {num}-р анги
-              </option>
-            ))}
-          </select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className={`
+                              flex items-center justify-between 
+                              h-10 w-full text-base px-[15px] py-2 
+                              border border-stroke-line rounded-lg
+                              ${
+                                currentclassnumber
+                                  ? "text-black"
+                                  : "text-label-caption"
+                              }
+                            `}
+              >
+                {currentclassnumber}-р анги
+                <ChevronDown size={20} className="text-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="start"
+              className="w-(--radix-dropdown-menu-trigger-width) bg-background-secondary"
+            >
+              {classes.map((num) => (
+                <DropdownMenuItem
+                  key={num}
+                  onClick={() => setCurrentClassnumber(num)}
+                >
+                  {num}-р анги
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div>
           <label className="text-label-secondary">Тайлбар</label>
-          <Input
+
+          <Textarea
             value={currentdescription}
             placeholder={currentdescription}
             onChange={(e) => setCurrentDescription(e.target.value)}
+            className="text-label-paragraph font-normal h-[70px] line-clamp-2"
           />
         </div>
 
@@ -135,16 +167,16 @@ export const SettingTab = ({
         </Button>
       </div>
 
-      <div className="bg-background-secondary border w-full gap-2.5 border-[#D9D9DF] rounded-[10px] p-5 flex flex-col">
+      <div className="text-[16px] font-semibold w-full gap-5 flex flex-col rounded-[10px] border-[0.6px] border-b-4 border-stroke-border bg-background-secondary p-5">
         <p className="font-semibold flex gap-2.5">
           <LinkIcon /> Ангийн холбоос
         </p>
 
         <div className="flex items-center justify-center">
-          {src && <Image src={src} alt="QR Code" width={228} height={228} />}
+          {src && <Image src={src} alt="QR Code" width={250} height={250} />}
         </div>
 
-        <div className="flex items-center justify-between w-full bg-background rounded-[10px] p-5">
+        <div className="flex flex-col sm:flex-row items-center justify-between w-full bg-background rounded-[10px] p-5">
           <span className="text-[16px] text-label-caption font-semibold">
             {link}
           </span>

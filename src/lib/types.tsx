@@ -73,6 +73,7 @@ export interface Classroom {
   classroomIcon: string;
   studentCount: number;
   classnumber: number;
+  classroomSubjectName: string;
 }
 
 export interface StudentsList {

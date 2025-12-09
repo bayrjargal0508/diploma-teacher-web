@@ -124,60 +124,6 @@ const ArchivePage = () => {
                   </span>
                 </div>
               </div>
-
-              {/* <div className="cursor-pointer">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-full hover:bg-background p-0.5">
-                      <MoreHorizontal size={24} />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="bottom"
-                    align="start"
-                    className="w-48 bg-background-secondary p-2 border border-stroke-line rounded-[10px]"
-                  >
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setEditType("name");
-                        setEditValue(cls.alias);
-                        setSelectedClassroom(cls);
-                      }}
-                    >
-                      <p className="flex items-center justify-start gap-1.5 text-sm font-semibold">
-                        <Edit2 size={16} /> Ангийн нэр засах
-                      </p>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setEditType("description");
-                        setEditValue(cls.description || "");
-                        setSelectedClassroom(cls);
-                      }}
-                      className="mt-2.5"
-                    >
-                      <p className="flex items-center justify-start gap-1.5 text-sm font-semibold">
-                        <Edit size={16} />
-                        Ангийн тайлбар засах
-                      </p>
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem
-                      className="mt-2.5"
-                      onClick={() => {
-                        setSelectedClassroom(cls);
-                        setIsOpen(true);
-                      }}
-                    >
-                      <p className="flex items-center justify-start gap-1.5 text-primary text-sm font-semibold">
-                        <Trash size={16} />
-                        Архив
-                      </p>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div> */}
             </div>
 
             <div className="flex items-center gap-4 text-sm mt-3 justify-start px-1">
