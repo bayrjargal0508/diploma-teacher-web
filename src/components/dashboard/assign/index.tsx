@@ -6,6 +6,7 @@ import { examShuffleContentNoId } from "@/actions";
 import DocsEditor from "@/components/ui/docs-toolbar";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
+import AssignContent from "./assign-content";
 
 const MathEditor = dynamic(() => import("./MathEditor"), {
   ssr: false,
@@ -16,7 +17,6 @@ const Assignlist = () => {
   const router = useRouter();
   const [content, setContent] = useState<ExamContent[] | null>(null);
   const [open, setOpen] = useState(false);
-  const [text, setText] = useState("");
 
   const currentTab = searchParams.get("tab") || "0";
 
@@ -62,12 +62,19 @@ const Assignlist = () => {
                 Даалгавар үүсгэх
               </Button>
             </div>
-            {open && <DocsEditor onClose={() => setOpen(false)}/>}
+            {open && (
+              <DocsEditor
+                onClose={() => setOpen(false)}
+                contentItem={{
+                  id: content[parseInt(currentTab)].id,
+                  name: content[parseInt(currentTab)].name,
+                }}
+              />
+            )}
           </div>
         )}
-      </div>
-      <MathEditor value={text} onChange={setText} />
-      
+      </div>    
+      <AssignContent contentName={content?.[parseInt(currentTab)]?.name} />  
     </div>
   );
 };
