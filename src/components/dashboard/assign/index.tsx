@@ -5,12 +5,7 @@ import { ExamContent } from "@/lib/types";
 import { examShuffleContentNoId } from "@/actions";
 import DocsEditor from "@/components/ui/docs-toolbar";
 import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
 import AssignContent from "./assign-content";
-
-const MathEditor = dynamic(() => import("./MathEditor"), {
-  ssr: false,
-});
 
 const Assignlist = () => {
   const searchParams = useSearchParams();
