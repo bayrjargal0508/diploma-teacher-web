@@ -254,6 +254,26 @@ export interface ExamContent {
   createdDateText: Date;
   examId: string;
 }
+export interface AllExamContent {
+  id: string;
+  createdDate: Date;
+  modifiedDate: Date;
+  subjectId: string;
+  schoolClass: number;
+  name: string;
+  prefix: string;
+  subjectName: string;
+  key: string;
+  createdDateText: Date;
+}
+export interface AllExamContentResponse {
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    total: number;
+  };
+  list: AllExamContent[];
+}
 export interface ShuffleExamPayload {
   questionContentCounts: {
     [contentId: string]: {

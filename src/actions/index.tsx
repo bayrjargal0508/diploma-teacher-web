@@ -1,4 +1,5 @@
 import {
+  AllExamContentResponse,
   Classroom,
   ClassroomActivityResponse,
   CreateClassroom,
@@ -22,7 +23,7 @@ import {
   UpdateExamMetadataType,
 } from "@/lib/types";
 import { CustomResponse, fetchUtils } from "@/utils/fetcher";
-import { BASE_URL, TEACHER_API_URL } from "@/utils/urls";
+import { BASE_URL, MANAGE_URL, TEACHER_API_URL } from "@/utils/urls";
 
 //-------------------------------------
 export type ShuffleExamResponse = void;
@@ -542,6 +543,15 @@ const examShuffleContentNoId = async () => {
   );
   return response;
 };
+//question content name
+const manageAllSubjectContentName = async () => {
+  const response = await fetchUtils.get<AllExamContentResponse>(
+    `${MANAGE_URL}/api/exam-question-content?pageSize=100`,
+    true
+  );
+
+  return response.data; 
+};
 
 export {
   login,
@@ -586,4 +596,5 @@ export {
   classroomExamCount,
   totalScore,
   examShuffleContentNoId,
+  manageAllSubjectContentName,
 };

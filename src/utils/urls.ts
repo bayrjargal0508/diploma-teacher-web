@@ -5,6 +5,8 @@ const TEACHER_API_URL = process.env.NEXT_PUBLIC_TEACHER_API_URL
 const EXAM_URL = process.env.EXAM_URL;
 const OLYMPIAD_URL = process.env.OLYMPIAD_URL;
 const GAMIFICATION_URL = process.env.GAMIFICATION_URL;
+const MANAGE_URL = process.env.NEXT_PUBLIC_MANAGE_URL
+
 export {
   BASE_URL,
   AUTH_API_URL,
@@ -13,4 +15,5 @@ export {
   OLYMPIAD_URL,
   GAMIFICATION_URL,
   TEACHER_API_URL,
+  MANAGE_URL
 };

@@ -1,5 +1,4 @@
 import Assignlist from "@/components/dashboard/assign";
-import React from "react";
 
 const AssignPage = () => {
   return (

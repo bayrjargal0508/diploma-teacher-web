@@ -304,7 +304,6 @@ const PendingStudents = ({
           </table>
         </div>
 
-        {/* Footer */}
         <div className="pt-3 px-1">
           <Pagination
             total={paginations?.total || 0}

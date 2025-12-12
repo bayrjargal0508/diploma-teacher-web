@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import MonsterLottie from "@/components/ui/loader";
 import EmptyPage from "../empty";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { processMathInHtml } from "@/lib/renderMath";
+import "katex/dist/katex.min.css";
 
 type Answer = { text: string; isCorrect: boolean };
 type AssignItem = {
@@ -111,7 +113,7 @@ const AssignContent = ({ contentName }: Props) => {
               {openQuestions[item._id] && (
                 <div
                   className="pt-4 prose prose-sm max-w-none text-foreground font-semibold"
-                  dangerouslySetInnerHTML={{ __html: item.question }}
+                  dangerouslySetInnerHTML={{ __html: processMathInHtml(item.question) }}
                 />
               )}
             </div>
