@@ -1,4 +1,3 @@
-// EditorWithToolbar.tsx
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
@@ -12,13 +11,11 @@ import TextAlign from "@tiptap/extension-text-align";
 type Props = {
   valueHtml: string;
   onChange: (html: string) => void;
-  onSave?: (html: string) => Promise<void> | void;
 };
 
 export default function EditorWithToolbar({
   valueHtml,
   onChange,
-  onSave,
 }: Props) {
   const editor = useEditor({
     immediatelyRender: false, // Add this line to fix SSR error
@@ -202,17 +199,6 @@ export default function EditorWithToolbar({
             className="px-2 py-1 rounded"
           >
             Redo
-          </button>
-
-          {/* Save */}
-          <button
-            onClick={() => {
-              const html = editor?.getHTML() || "";
-              if (onSave) onSave(html);
-            }}
-            className="ml-3 px-3 py-1 rounded bg-blue-600 text-white"
-          >
-            Save
           </button>
         </div>
       </div>

@@ -3,11 +3,12 @@ import Assign from "../models/Assign";
 
 export const createAssign = async (req: Request, res: Response) => {
   try {
-    const { contentId, contentName, question, answers, questionType } = req.body;
+    const { contentId, contentName, subject, question, answers, questionType } = req.body;
 
     if (
       !contentId ||
       !contentName ||
+      !subject ||
       !question ||
       !Array.isArray(answers) ||
       !questionType
@@ -16,7 +17,7 @@ export const createAssign = async (req: Request, res: Response) => {
         .status(400)
         .json({
           message:
-            "contentId, contentName, question, answers, questionType шаардлагатай",
+            "contentId, contentName, subject, question, answers, questionType шаардлагатай",
         });
     }
 
@@ -49,6 +50,7 @@ export const createAssign = async (req: Request, res: Response) => {
     const saved = await Assign.create({
       contentId,
       contentName,
+      subject: subject.trim(),
       questionType,
       question: question.trim(),
       answers: formattedAnswers,

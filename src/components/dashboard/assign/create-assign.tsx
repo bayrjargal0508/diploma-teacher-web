@@ -15,6 +15,7 @@ interface Types {
   contentItem?: Pick<ExamContent, "id" | "name">;
 }
 const CreateAssign = ({ contentItem }: Types) => {
+  const [subjectText, setSubjectText] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [activeTab, setActiveTab] = useState<"subject" | "question" | "answer">(
     "subject"
@@ -75,10 +76,42 @@ const CreateAssign = ({ contentItem }: Types) => {
   const handleSave = async () => {
     if (saving) return;
 
+    const trimmedSubject = subjectText.trim();
     const trimmedQuestion = questionText.trim();
 
+    // Validation
     if (!contentItem?.id || !contentItem?.name) {
       setError("Агуулгын мэдээлэл олдсонгүй. Дахин оролдоно уу.");
+      return;
+    }
+
+    if (!trimmedSubject) {
+      setError("Судлах хичээлээ оруулна уу");
+      return;
+    }
+
+    if (!trimmedQuestion) {
+      setError("Асуултаа оруулна уу");
+      return;
+    }
+
+    if (!answerType) {
+      setError("Хариултын төрлөө сонгоно уу.");
+      return;
+    }
+
+    if (!answers.length) {
+      setError("Хариултын тоог оруулна уу");
+      return;
+    }
+
+    if (answers.some((a) => !a.text.trim())) {
+      setError("Бүх хариултын текстийг бөглөнө үү");
+      return;
+    }
+
+    if (!answers.some((a) => a.isCorrect)) {
+      setError("Дор хаяж нэг зөв хариулт сонгоно уу");
       return;
     }
 
@@ -93,7 +126,7 @@ const CreateAssign = ({ contentItem }: Types) => {
         body: JSON.stringify({
           contentId: contentItem.id,
           contentName: contentItem.name,
-          //   subject: subjectRegister,
+          subject: trimmedSubject,
           questionType: answerType,
           question: trimmedQuestion,
           answers: answers.map((a) => ({
@@ -110,11 +143,20 @@ const CreateAssign = ({ contentItem }: Types) => {
       }
 
       toast.success("Амжилттай хадгалагдлаа");
+      setSubjectText("");
       setQuestionText("");
       setAnswers([]);
       setAnswerCount(0);
+      setAnswerType(null);
+      setError(null);
+      
+      // Navigate back to assign list after successful save
+      setTimeout(() => {
+        router.push("/dashboard/assign");
+      }, 1000);
     } catch (err) {
       console.error("Assign save error", err);
+      setError("Сервертэй холбогдоход алдаа гарлаа.");
       toast.error("Сервертэй холбогдоход алдаа гарлаа.");
     } finally {
       setSaving(false);
@@ -163,9 +205,8 @@ const CreateAssign = ({ contentItem }: Types) => {
             <p className="subTitle mb-3">Судлах хичээл</p>
 
             <EditorWithToolbar
-              valueHtml={questionText} 
-              onChange={(html) => setQuestionText(html)} 
-              onSave={handleSave}
+              valueHtml={subjectText} 
+              onChange={(html) => setSubjectText(html)} 
             />
           </div>
         )}
@@ -177,6 +218,18 @@ const CreateAssign = ({ contentItem }: Types) => {
               valueHtml={questionText}
               onChange={(html) => setQuestionText(html)}
             />
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-destructive text-sm">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-3 rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-emerald-700 text-sm">
+            {success}
           </div>
         )}
 
@@ -198,7 +251,6 @@ const CreateAssign = ({ contentItem }: Types) => {
                 onChange={handleAnswerTypeChange}
               />
             </div>
-            {/* Хариултын мөрүүд */}
             <div className="flex flex-col gap-4">
               {answers.map((answer, i) => (
                 <div key={i} className="flex gap-2 bg-background-secondary ">
@@ -235,7 +287,6 @@ const CreateAssign = ({ contentItem }: Types) => {
                     </div>
                   )}
 
-                  {/* MULTIPLE ANSWER хувилбар */}
                   {answerType === "multiple" && (
                     <div className="flex items-center gap-2">
                       <Checkbox

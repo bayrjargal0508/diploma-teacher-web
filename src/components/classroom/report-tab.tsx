@@ -41,7 +41,7 @@ const ReportTab = () => {
         {stats.map((item, index) => (
           <div
             key={index}
-            className="bg-background-secondary flex justify-between items-start py-5 px-8 rounded-md shadow-sm w-full gap-2.5"
+            className="bg-background-secondary flex justify-between items-start py-5 px-8 rounded-md border border-stroke-border w-full gap-2.5"
           >
             <div>
               <p className="text-gray-500 text-sm">{item.label}</p>
@@ -51,7 +51,7 @@ const ReportTab = () => {
           </div>
         ))}
       </div>
-      <div className="flex gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <DonutChart attendanceData={attendanceData} trendData={trendData} />
         <AvgScoreChart data={classData} />
       </div>

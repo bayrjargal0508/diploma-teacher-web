@@ -1,58 +1,49 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { AllExamContent } from "@/lib/types";
-import { classroom, manageAllSubjectContentName } from "@/actions";
 import { Button } from "@/components/ui/button";
 import AssignContent from "./assign-content";
-import { toast } from "react-toastify";
+import { useContent } from "@/components/providers/content-categories";
+import MonsterLottie from "@/components/ui/loader";
 
 const Assignlist = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [content, setContent] = useState<AllExamContent[] | null>(null);
+  const { content, loading, error } = useContent();
 
   const currentTab = searchParams.get("tab") || "0";
-
-  useEffect(() => {
-    const loadData = async () => {
-      const classroomRes = await classroom();
-      let targetSubjectName = "";
-
-      if (
-        classroomRes.result &&
-        Array.isArray(classroomRes.data) &&
-        classroomRes.data.length > 0
-      ) {
-        targetSubjectName = classroomRes.data[0].classroomSubjectName;
-      } else {
-        toast.error(classroomRes.message);
-      }
-
-      const contentData = await manageAllSubjectContentName();
-      if (contentData?.list) {
-        const filteredContent = targetSubjectName
-          ? contentData.list.filter(
-              (item) => item.subjectName === targetSubjectName
-            )
-          : contentData.list;
-
-        setContent(filteredContent);
-        console.log("Filtered content:", filteredContent);
-      }
-    };
-
-    loadData();
-  }, []);
 
   const handleTabChange = (tabValue: string) => {
     router.push(`/dashboard/assign?tab=${tabValue}`);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background rounded-[10px]">
+        <MonsterLottie />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (!content || content.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <p className="text-label-paragraph">No content available</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex gap-4 mb-6 border-b border-stroke-border">
-        {content?.map((item, index) => (
+        {content.map((item, index) => (
           <button
             key={item.id ?? `tab-${index}`}
             onClick={() => handleTabChange(index.toString())}
@@ -68,10 +59,10 @@ const Assignlist = () => {
       </div>
 
       <div>
-        {content && content[parseInt(currentTab)] && (
+        {content[parseInt(currentTab)] && (
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-xl font-bold mb-4">
+              <p className="text-xl font-bold">
                 {content[parseInt(currentTab)].name}
               </p>
               <Button
@@ -79,7 +70,7 @@ const Assignlist = () => {
                 onClick={() =>
                   router.push(
                     `/dashboard/assign/create-assign?id=${
-                      content?.[parseInt(currentTab)]?.id
+                      content[parseInt(currentTab)]?.id
                     }`
                   )
                 }
@@ -87,19 +78,10 @@ const Assignlist = () => {
                 Даалгавар үүсгэх
               </Button>
             </div>
-            {/* {open && (
-              <DocsEditor
-                onClose={() => setOpen(false)}
-                contentItem={{
-                  id: content[parseInt(currentTab)].id,
-                  name: content[parseInt(currentTab)].name,
-                }}
-              />
-            )} */}
           </div>
         )}
       </div>
-      <AssignContent contentName={content?.[parseInt(currentTab)]?.name} />
+      <AssignContent contentName={content[parseInt(currentTab)]?.name} />
     </div>
   );
 };

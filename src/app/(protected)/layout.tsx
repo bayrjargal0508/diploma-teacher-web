@@ -6,6 +6,7 @@ import { TitleProvider } from "@/components/providers/title-provider";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { ExamTotalProvider } from "@/components/providers/exam-total";
+import { ContentProvider } from "@/components/providers/content-categories";
 
 const ProtectedLayout = async ({ children }: { children: ReactNode }) => {
   const isLogged = await isAuthenticated();
@@ -22,9 +23,11 @@ const ProtectedLayout = async ({ children }: { children: ReactNode }) => {
       <TitleProvider>
         <ClassroomRefreshProvider>
           <ExamTotalProvider>
-            <ProtectedLayoutContent fullName={fullName}>
-              {children}
-            </ProtectedLayoutContent>
+            <ContentProvider>
+              <ProtectedLayoutContent fullName={fullName}>
+                {children}
+              </ProtectedLayoutContent>
+            </ContentProvider>
           </ExamTotalProvider>
         </ClassroomRefreshProvider>
       </TitleProvider>

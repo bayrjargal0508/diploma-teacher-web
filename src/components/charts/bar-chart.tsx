@@ -18,8 +18,8 @@ type ClassKey = string;
 export default function AvgScoreChart({ data }: AvgScoreChartProps) {
   const [class1, setClass1] = useState<ClassKey>("class1");
   return (
-    <div className="bg-background-secondary rounded-md w-full h-full p-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-background-secondary rounded-md w-full h-full p-4 border border-stroke-border">
+      <div className="flex items-center justify-between mb-5">
         <p className="subTitle mb-2">Дундаж дүн ба Ирц</p>
         <select
           title="classes"
@@ -32,7 +32,7 @@ export default function AvgScoreChart({ data }: AvgScoreChartProps) {
         </select>
       </div>
 
-      <ResponsiveContainer width="100%" height={320}>
+      <ResponsiveContainer width="100%" height={380}>
         <BarChart data={data}>
           <XAxis dataKey="name" />
           <YAxis />

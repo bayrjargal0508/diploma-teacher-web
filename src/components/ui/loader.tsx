@@ -1,7 +1,7 @@
 "use client";
 
 import Lottie from "lottie-react";
-import animationData from "../lotties/loader.json";
+import animationData from "../lotties/default-loader.json";
 import { CSSProperties } from "react";
 
 interface MonsterLottieProps {

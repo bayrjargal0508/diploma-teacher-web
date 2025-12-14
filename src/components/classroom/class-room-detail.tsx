@@ -138,7 +138,7 @@ export const ClassroomDetail = ({ classroomId }: ClassroomDetailProps) => {
 
               {itemSelected === 1 && <ExamTab classroomId={classroomId} />}
 
-              {itemSelected === 2 && <ReportTab />}
+              {itemSelected === 2 && <ReportTab/>}
 
               {itemSelected === 3 && (
                 <SettingTab

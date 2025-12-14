@@ -10,6 +10,7 @@ import { removeStudent } from "@/actions";
 import LogoutConfirmModal from "../custom/log-out";
 import MenuSidebar from "../icons/menu-icon";
 import Pagination from "../ui/pagination";
+import Link from "next/link";
 
 interface TableStudentsProps {
   studentlist: StudentsList | null;
@@ -47,6 +48,7 @@ const TableStudents = ({ studentlist, getStudentData }: TableStudentsProps) => {
         .includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, students]);
+  
   const handleRemove = async (
     classroomId: string,
     classroomStudentId: string
@@ -158,20 +160,25 @@ const TableStudents = ({ studentlist, getStudentData }: TableStudentsProps) => {
                   className="border-b border-background hover:bg-gray-50 dark:hover:bg-gray-600
                     text-[14px] font-semibold"
                 >
-                  <td className="py-[15px] px-5 min-w-[180px] text-left flex items-center gap-2 align-middle">
-                    <div className="p-1 bg-accent rounded-full">
-                      <Image
-                        src={
-                          item.student.gender === "FEMALE"
-                            ? "/assets/photos/logo/female-icon.png"
-                            : "/assets/photos/logo/male-icon.png"
-                        }
-                        width={24}
-                        height={24}
-                        alt="gender"
-                      />
-                    </div>
-                    {item.student.firstName} {item.student.lastName}
+                 <td className="py-[15px] px-5 min-w-[180px] text-left align-middle">
+                    <Link
+                      href={`/dashboard/student/${item.student.id}?classroomId=${item.classroomId}`}
+                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                    >
+                      <div className="p-1 bg-accent rounded-full">
+                        <Image
+                          src={
+                            item.student.gender === "FEMALE"
+                              ? "/assets/photos/logo/female-icon.png"
+                              : "/assets/photos/logo/male-icon.png"
+                          }
+                          width={24}
+                          height={24}
+                          alt="gender"
+                        />
+                      </div>
+                      {item.student.firstName} {item.student.lastName}
+                    </Link>
                   </td>
 
                   <td className="py-[15px] px-5 text-left align-middle">

@@ -45,7 +45,7 @@ export default function DonutChart({
   );
 
   return (
-    <div className="bg-background-secondary rounded-md p-5 w-full">
+    <div className="bg-background-secondary rounded-md p-5 w-full border border-stroke-border">
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-[16px] font-semibold text-foreground">

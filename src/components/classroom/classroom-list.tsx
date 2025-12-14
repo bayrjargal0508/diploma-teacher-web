@@ -305,7 +305,7 @@ const ClassroomList = () => {
 
         {isEditing && selectedClassroom && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
-            <div className="bg-background-secondary rounded-xl p-6 w-[400px] shadow-lg">
+            <div className="bg-background-secondary rounded-xl p-6 w-[400px]">
               <h2 className="text-lg font-semibold mb-4">Нэр засах</h2>
               <Input
                 type="text"
