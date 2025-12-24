@@ -11,7 +11,8 @@ import {
 import { Classroom } from "@/lib/types";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
-
+import { I18nProvider } from "@react-aria/i18n";
+import { Calendar24 } from "../ui/date-picker";
 interface Types {
   onClose: () => void;
   onSuccess?: () => void;
@@ -84,83 +85,75 @@ const ExamSendModal = ({ onClose, examMetadataId }: Types) => {
   };
 
   return (
-    <div
-      id="popup-modal"
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 px-4 w-full"
-      onClick={onClose}
-    >
+    <I18nProvider locale="en-US">
       <div
-        className="bg-background w-[500px] border rounded-2xl p-5 space-y-5"
-        onClick={(e) => e.stopPropagation()}
+        id="popup-modal"
+        className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 px-4 w-full"
+        onClick={onClose}
       >
-        <div className="flex justify-between items-center mb-4">
-          <p className="title text-left">Шалгалт илгээх</p>
-          <X size={16} onClick={onClose} className="cursor-pointer" />
-        </div>
-        <div>
-          <p className="subTitle pb-2">Анги сонгох</p>
+        <div
+          className="bg-background w-162.5 border rounded-2xl p-5 space-y-5"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <p className="title text-left">Шалгалт илгээх</p>
+            <X size={16} onClick={onClose} className="cursor-pointer" />
+          </div>
+          <div>
+            <p className="subTitle pb-2">Анги сонгох</p>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Input
-                readOnly
-                value={selectedClassroom?.alias || "Ангиа сонгоно уу"}
-                className="cursor-pointer text-left"
-              />
-            </DropdownMenuTrigger>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Input
+                  readOnly
+                  value={selectedClassroom?.alias || "Ангиа сонгоно уу"}
+                  className="cursor-pointer text-left"
+                />
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent
-              className="z-9999 text-left w-full"
-              align="start"
+              <DropdownMenuContent
+                className="z-9999 text-left w-full"
+                align="start"
+              >
+                {classrooms.map((room) => (
+                  <DropdownMenuItem
+                    key={room.id}
+                    onSelect={() => setSelectedClassroom(room)}
+                  >
+                    {room.alias}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="w-full flex items-start gap-4">
+            <div className="flex flex-col gap-2 w-75">
+              <p className="subTitle">Эхлэх огноо</p>
+              <Calendar24 onChange={(value) => setStartDate(value)} />
+            </div>
+            <div className="flex flex-col gap-2 w-75">
+              <p className="subTitle">Дуусах огноо</p>
+              <Calendar24 onChange={(value) => setFinishDate(value)} />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Button variant="secondary" onClick={onClose}>
+              Буцах
+            </Button>
+
+            <Button
+              className="w-32"
+              onClick={handleSend}
+              disabled={loadingSubmit}
             >
-              {classrooms.map((room) => (
-                <DropdownMenuItem
-                  key={room.id}
-                  onSelect={() => setSelectedClassroom(room)}
-                >
-                  {room.alias}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="flex justify-between gap-5">
-          <div className="flex flex-col gap-2">
-            <p className="subTitle">Эхлэх огноо</p>
-            <input
-              type="datetime-local"
-              placeholder="2025.10.14 / 10:00"
-              className="border border-stroke-border p-2 rounded-lg w-[220px]"
-              onChange={(e) => setStartDate(e.target.value)}
-            />
+              {loadingSubmit ? "Илгээж байна..." : "Шалгалт илгээх"}
+            </Button>
           </div>
-
-          <div className="flex flex-col gap-2">
-            <p className="subTitle">Дуусах огноо</p>
-            <input
-              type="datetime-local"
-              className="border border-stroke-border p-2 rounded-lg w-[220px]"
-              onChange={(e) => setFinishDate(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <Button variant="secondary" onClick={onClose}>
-            Буцах
-          </Button>
-
-          <Button
-            className="w-32"
-            onClick={handleSend}
-            disabled={loadingSubmit}
-          >
-            {loadingSubmit ? "Илгээж байна..." : "Шалгалт илгээх"}
-          </Button>
         </div>
       </div>
-    </div>
+    </I18nProvider>
   );
 };
 

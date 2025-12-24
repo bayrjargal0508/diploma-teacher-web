@@ -42,7 +42,7 @@ const ProtectedLayoutContent = ({
                   className="object-contain size-6"
                 />
               </Button>
-              <span className="ml-2 subTitle mt-3">{fullName}</span>
+              <span className="subTitle">{fullName}</span>
             </div>
           </div>
         </div>

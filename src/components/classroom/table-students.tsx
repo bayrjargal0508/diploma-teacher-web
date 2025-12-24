@@ -183,12 +183,12 @@ const TableStudents = ({ studentlist, getStudentData }: TableStudentsProps) => {
 
                   <td className="py-[15px] px-5 text-left align-middle">
                     {item.student.premium ? (
-                      <span className="flex items-center gap-1 bg-[#DBF4E6] text-[#41C993] border border-[#41C993] px-3.5 py-1 rounded-full text-[12px] w-fit">
+                      <span className="flex items-center gap-1 bg-positive/12 text-positive border border-positive px-3.5 py-1 rounded-full text-[12px] w-fit">
                         <Dot className="w-5 h-5" />
                         Эрхтэй
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 bg-primary-tertiary text-[#CF4D5B] border border-[#E5606A] px-3.5 py-1 rounded-full text-[12px] w-fit">
+                      <span className="flex items-center gap-1 bg-negative/12 text-negative border border-negative px-3.5 py-1 rounded-full text-[12px] w-fit">
                         <Dot className="w-5 h-5" />
                         Эрхгүй
                       </span>

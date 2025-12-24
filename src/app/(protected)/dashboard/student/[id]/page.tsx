@@ -46,7 +46,7 @@ export default async function StudentPage({
 
   return (
     <div className="flex gap-2.5">
-      <div className="min-w-[300px] shrink-0 bg-background rounded-[10px] p-4 pb-10 h-full">
+      <div className="min-w-[300px] shrink-0 bg-background rounded-[10px] p-4 pb-10 min-h-screen">
         <div className="flex flex-col items-center gap-4 justify-start pt-9">
           <div className="rounded-full bg-accent p-4 flex items-center justify-center size-[120px]">
             <Image
@@ -72,7 +72,7 @@ export default async function StudentPage({
               Эрхтэй
             </span>
           ) : (
-            <span className="flex items-center gap-1 bg-primary-tertiary text-[#CF4D5B] border border-[#E5606A] px-3.5 py-1 rounded-full text-[12px] w-fit">
+            <span className="flex items-center gap-1 bg-negative/12 text-[#CF4D5B] border border-[#E5606A] px-3.5 py-1 rounded-full text-[12px] w-fit">
               <Dot className="w-5 h-5" />
               Эрхгүй
             </span>

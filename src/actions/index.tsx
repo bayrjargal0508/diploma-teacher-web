@@ -443,16 +443,38 @@ const editExamMetadata = async (data: UpdateExamMetadataType) => {
 };
 
 // classroom exam list
-const examClassroomList = async (id: string) => {
+const examClassroomList = async (id: string, currentPage: number = 1, pageSize: number = 10) => {
   try {
     const response = await fetchUtils.get<ExamListApiResponse>(
-      `${TEACHER_API_URL}/api/classroom/${id}/exams`,
+      `${TEACHER_API_URL}/api/classroom/${id}/exams?currentPage=${currentPage}&pageSize=${pageSize}`,
       true
     );
-
-    return response.data?.list;
+    if (response.data) {
+      return response.data;
+    }
+        return {
+      pagination: {
+        currentPage: currentPage,
+        pageSize: pageSize,
+        total: 0,
+        sortDirection: "ASC",
+        sortParams: [],
+        current: currentPage,
+      },
+      list: [],
+    };
   } catch {
-    return [];
+    return {
+      pagination: {
+        currentPage: currentPage,
+        pageSize: pageSize,
+        total: 0,
+        sortDirection: "ASC",
+        sortParams: [],
+        current: currentPage,
+      },
+      list: [],
+    };
   }
 };
 // predefined Categories
@@ -551,6 +573,33 @@ const manageAllSubjectContentName = async () => {
   );
 
   return response.data; 
+};
+
+export const sendAssign = async (
+  assignId: string,
+  classroomId: string,
+  studentIds: string[]
+) => {
+  const res = await fetch("http://localhost:4000/api/assignments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Bearer ${token}` // байвал
+    },
+    body: JSON.stringify({
+      assignId,
+      classroomId,
+      studentIds,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data?.message || "Assign send failed");
+  }
+
+  return data;
 };
 
 export {

@@ -33,7 +33,7 @@ const ClassroomActivities = ({
     fetchData();
   }, [classroomId, onStudentAdded]);
   return (
-    <div className="space-y-5 h-[400px] flex flex-col">
+    <div className="space-y-5 h-full flex flex-col">
       <div
         className="flex justify-between items-center cursor-pointer w-full"
         onClick={() => setIsOpen(!isOpen)}
@@ -44,7 +44,7 @@ const ClassroomActivities = ({
       </div>
 
       {isOpen && students.length > 0 && (
-        <div className="space-y-3 max-h-[400px] overflow-y-auto">
+        <div className="space-y-3 max-h-full overflow-y-auto">
           {students.map((activity) => (
             <div key={activity.id} className="space-y-2">
               <div className="flex items-center gap-3">

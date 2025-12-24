@@ -205,7 +205,7 @@ const ClassroomList = () => {
 
                     <span className="text-xs rounded-md ">
                       {cls.status === "ACTIVE" ? (
-                        <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-md border-positive border">
+                        <span className="text-xs text-green-600 bg-positive/12 px-2 py-1 rounded-md border-positive border">
                           Идэвхтэй
                         </span>
                       ) : cls.status === "INACTIVE" ? (

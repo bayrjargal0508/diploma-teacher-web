@@ -41,7 +41,13 @@ export const ClassroomDetail = ({ classroomId }: ClassroomDetailProps) => {
   const tabParam = Number(searchParams.get("tab")) || 0;
   const [itemSelected, setItemSelected] = useState(tabParam);
 
-  const CLASSROOM_TABS = ["Сурагчид", "Шалгалт", "Тайлан", "Тохиргоо"];
+  const CLASSROOM_TABS = [
+    "Сурагчид",
+    "Шалгалт",
+    "Тайлан",
+    "Тохиргоо",
+    "Даалгавар",
+  ];
 
   // Ensure tab param exists
   useEffect(() => {
@@ -138,7 +144,7 @@ export const ClassroomDetail = ({ classroomId }: ClassroomDetailProps) => {
 
               {itemSelected === 1 && <ExamTab classroomId={classroomId} />}
 
-              {itemSelected === 2 && <ReportTab/>}
+              {itemSelected === 2 && <ReportTab />}
 
               {itemSelected === 3 && (
                 <SettingTab
@@ -148,6 +154,9 @@ export const ClassroomDetail = ({ classroomId }: ClassroomDetailProps) => {
                   description={codeData.description}
                   classnumber={codeData.classNumber}
                 />
+              )}
+               {itemSelected === 4 && (
+                <p>cnjdhiusc</p>
               )}
             </>
           )}

@@ -5,8 +5,13 @@ import { ChevronLeft, ChevronRight, Send } from "lucide-react";
 import EmptyPage from "../empty";
 import MonsterLottie from "@/components/ui/loader";
 import MenuSidebar from "@/components/icons/menu-icon";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import ExamSendModal from "@/components/exam/exam-send-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import AssignSendModal from "./assign-send-modal";
 
 type Answer = { text: string; isCorrect: boolean };
 type AssignItem = {
@@ -31,6 +36,7 @@ const AssignContent = ({ contentName }: Props) => {
   const [activeSlides, setActiveSlides] = useState<Record<string, number>>({});
   const [isOpenSend, setIsOpenSend] = useState(false);
   const [selectedAssignId, setSelectedAssignId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -110,7 +116,9 @@ const AssignContent = ({ contentName }: Props) => {
                 <div className="flex flex-col items-start justify-start gap-2 mb-2">
                   <p className="font-semibold">{item.contentName}</p>
                   <span className="text-xs text-primary whitespace-nowrap">
-                    {item.questionType === "truefalse" ? "Үнэн/Худал" : "Олон хариулт"}
+                    {item.questionType === "truefalse"
+                      ? "Үнэн/Худал"
+                      : "Олон хариулт"}
                   </span>
                 </div>
                 <DropdownMenu>
@@ -126,15 +134,19 @@ const AssignContent = ({ contentName }: Props) => {
                     side="bottom"
                     align="start"
                     className="w-48 p-2 border border-stroke-line rounded-[10px] bg-background-secondary"
-                  ><DropdownMenuItem>
-                      <p className="flex items-center justify-start gap-1.5 text-sm font-semibold" onClick={() => {
-                            setSelectedAssignId(item._id);
-                            setIsOpenSend(true);
-                          }}>
+                  >
+                    <DropdownMenuItem>
+                      <p
+                        className="flex items-center justify-start gap-1.5 text-sm font-semibold"
+                        onClick={() => {
+                          setSelectedAssignId(item._id);
+                          setIsOpenSend(true);
+                        }}
+                      >
                         <Send /> Сурагч руу илгээх
                       </p>
-                    </DropdownMenuItem></DropdownMenuContent>
-
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
                 </DropdownMenu>
               </div>
 
@@ -143,18 +155,33 @@ const AssignContent = ({ contentName }: Props) => {
                 {/* Subject Slide */}
                 {currentSlide === 0 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">СУДЛАХ ХИЧЭЭЛ</h3>
+                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">
+                      СУДЛАХ ХИЧЭЭЛ
+                    </h3>
+
                     <div
-                      className="prose prose-sm max-w-none text-gray-800"
+                      className={`prose prose-sm max-w-none text-gray-800 overflow-hidden ${
+                        expanded ? "max-h-none" : "max-h-[120px]"
+                      }`}
                       dangerouslySetInnerHTML={{ __html: item.subject }}
                     />
+
+                    <button
+                      type="button"
+                      onClick={() => setExpanded(!expanded)}
+                      className="mt-2 text-sm font-medium text-primary hover:underline"
+                    >
+                      {expanded ? "Хураах" : "Илүү ихийг харах . . ."}
+                    </button>
                   </div>
                 )}
 
                 {/* Question Slide */}
                 {currentSlide === 1 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">АСУУЛТ</h3>
+                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">
+                      АСУУЛТ
+                    </h3>
                     <div
                       className="prose prose-sm max-w-none text-gray-800 font-semibold"
                       dangerouslySetInnerHTML={{ __html: item.question }}
@@ -165,7 +192,9 @@ const AssignContent = ({ contentName }: Props) => {
                 {/* Answers Slide */}
                 {currentSlide === 2 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">ХАРИУЛТ</h3>
+                    <h3 className="text-sm font-semibold text-label-paragraphy mb-3">
+                      ХАРИУЛТ
+                    </h3>
                     <div className="space-y-3">
                       {item.answers?.map((ans, idx) => {
                         const text =
@@ -176,16 +205,18 @@ const AssignContent = ({ contentName }: Props) => {
                         return (
                           <div
                             key={idx}
-                            className={`flex items-center gap-3 p-2 rounded ${ans.isCorrect
-                              ? "text-positive font-medium"
-                              : "text-label-paragraphy"
-                              }`}
+                            className={`flex items-center gap-3 p-2 rounded ${
+                              ans.isCorrect
+                                ? "text-positive font-medium"
+                                : "text-label-paragraphy"
+                            }`}
                           >
                             <span
-                              className={`flex items-center justify-center shrink-0 ${ans.isCorrect
-                                ? "text-background-secondary bg-positive rounded-full w-7 h-7 text-sm font-semibold"
-                                : "text-primary w-7 h-7 text-sm font-semibold"
-                                }`}
+                              className={`flex items-center justify-center shrink-0 ${
+                                ans.isCorrect
+                                  ? "text-background-secondary bg-positive rounded-full w-7 h-7 text-sm font-semibold"
+                                  : "text-primary w-7 h-7 text-sm font-semibold"
+                              }`}
                             >
                               {String.fromCharCode(65 + idx)}
                             </span>
@@ -215,10 +246,11 @@ const AssignContent = ({ contentName }: Props) => {
                     {slides.map((_, idx) => (
                       <div
                         key={idx}
-                        className={`h-1 rounded-full transition-all ${idx === currentSlide
-                          ? "bg-primary w-8"
-                          : "bg-gray-300 w-4"
-                          }`}
+                        className={`h-1 rounded-full transition-all ${
+                          idx === currentSlide
+                            ? "bg-primary w-8"
+                            : "bg-gray-300 w-4"
+                        }`}
                       />
                     ))}
                   </div>
@@ -231,16 +263,16 @@ const AssignContent = ({ contentName }: Props) => {
                   <ChevronRight size={20} className="text-label-paragraphy" />
                 </button>
               </div>
-
             </div>
           );
         })}
       </div>
       {isOpenSend && selectedAssignId && (
-      <ExamSendModal
-          examMetadataId={selectedAssignId}
+        <AssignSendModal
+          assignId={selectedAssignId}
           onClose={() => setIsOpenSend(false)}
-        />)}
+        />
+      )}
     </div>
   );
 };

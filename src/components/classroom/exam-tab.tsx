@@ -5,7 +5,7 @@ import DateIcon from "../icons/date-icon";
 import MenuSidebar from "../icons/menu-icon";
 import BookQueue from "../icons/book-queue.";
 import { Button } from "../ui/button";
-import { Filter, Search } from "lucide-react";
+import { ChevronDown, Filter, Search } from "lucide-react";
 import { toast } from "react-toastify";
 import { examClassroomList, classroomExamCount } from "@/actions";
 import { useEffect, useState, useRef } from "react";
@@ -18,7 +18,11 @@ import ExamResultModal from "./exam-result-modal";
 import Pagination from "../ui/pagination";
 import { useExamTotal } from "../providers/exam-total";
 import MonsterLottie from "../ui/loader";
-
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
 interface Types {
   classroomId: string;
 }
@@ -46,41 +50,38 @@ const ExamTab = ({ classroomId }: Types) => {
   >(null);
 
   const [isLoadingCount, setIsLoadingCount] = useState(false);
-  
+
   const { getTotalForClassroom, setTotalForClassroom } = useExamTotal();
   const total = getTotalForClassroom(classroomId);
-  
+
   const setTotalRef = useRef(setTotalForClassroom);
   setTotalRef.current = setTotalForClassroom;
 
   useEffect(() => {
     let isMounted = true;
 
-    const fetchExamList = async (
-      currentPage: number,
-      currentPageSize: number
-    ): Promise<ExamListApiResponse> => {
+    const fetchExamList = async (): Promise<ExamListApiResponse> => {
       try {
-        const result = await examClassroomList(classroomId);
-
+        const result = await examClassroomList(classroomId, page, pageSize);
         if (
           result &&
           typeof result === "object" &&
+          !Array.isArray(result) &&
           "list" in result &&
           "pagination" in result
         ) {
-          return result as ExamListApiResponse;
+          const examResponse = result as ExamListApiResponse;
+          return examResponse;
         }
-
         if (Array.isArray(result)) {
           return {
             pagination: {
-              currentPage,
-              pageSize: currentPageSize,
+              currentPage: page,
+              pageSize: pageSize,
               total: result.length,
               sortDirection: "ASC",
               sortParams: [],
-              current: currentPage,
+              current: page,
             },
             list: result,
           };
@@ -91,12 +92,12 @@ const ExamTab = ({ classroomId }: Types) => {
         toast.error(`Сүлжээний алдаа. ${error}`);
         return {
           pagination: {
-            currentPage,
-            pageSize: currentPageSize,
+            currentPage: page,
+            pageSize: pageSize,
             total: 0,
             sortDirection: "ASC",
             sortParams: [],
-            current: currentPage,
+            current: page,
           },
           list: [],
         };
@@ -105,7 +106,7 @@ const ExamTab = ({ classroomId }: Types) => {
 
     const load = async () => {
       setIsLoading(true);
-      const data = await fetchExamList(page, pageSize);
+      const data = await fetchExamList();
       if (isMounted) {
         setExamList(data);
         setTotalRef.current(classroomId, data.pagination.total);
@@ -119,6 +120,10 @@ const ExamTab = ({ classroomId }: Types) => {
       isMounted = false;
     };
   }, [classroomId, page, pageSize]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [classroomId]);
 
   const handleExamClick = async (exam: ExamDetailType) => {
     setSelectedExam(exam);
@@ -150,11 +155,17 @@ const ExamTab = ({ classroomId }: Types) => {
 
   const formatDate = (iso: string | null) => {
     if (!iso) return "-";
+
     const d = new Date(iso);
-    return d
-      .toLocaleString("en-CA", { hour12: false })
-      .replace(",", "")
-      .slice(0, 16);
+
+    const date = d.toLocaleDateString("en-CA");
+    const time = d.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    return `${date.replaceAll("-", ".")} / ${time}`;
   };
 
   if (isLoading)
@@ -165,10 +176,10 @@ const ExamTab = ({ classroomId }: Types) => {
     );
 
   return (
-    <div className="flex flex-col gap-4 mb-5 h-screen">
+    <div className="flex flex-col gap-4 min-h-screen">
       <div className="flex justify-between items-center">
         <p className="font-extrabold text-[18px] text-primary-fifth">
-          <span className="text-primary pr-2.5">{total}</span> Шалгалт
+          <span className="text-primary">{total}</span> Шалгалт
         </p>
 
         <div className="flex gap-2.5 items-center">
@@ -181,14 +192,13 @@ const ExamTab = ({ classroomId }: Types) => {
             Шүүлтүүр
           </Button>
 
-          <div className="relative h-10 w-[300px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-background_secondary" />
-            <input
-              type="text"
-              placeholder="Хайх"
-              className="pl-10 pr-3 rounded-lg border border-gray-300 h-full w-full text-[16px] leading-6
-              font-semibold placeholder:text-gray-400 focus:border-primary_primary focus:outline-none dark:bg-[#313437]"
-            />
+          <div className="relative h-10 w-75">
+            <InputGroup>
+              <InputGroupInput placeholder="Хайх" />
+              <InputGroupAddon>
+                <Search />
+              </InputGroupAddon>
+            </InputGroup>
           </div>
         </div>
       </div>
@@ -197,24 +207,44 @@ const ExamTab = ({ classroomId }: Types) => {
         <div className="overflow-hidden rounded-[10px] border border-background">
           <table className="bg-background-secondary w-full">
             <thead className="border-background border-b">
-              <tr className="text-label-caption font-medium text-[14px] leading-[18px]">
-                <th className="py-[15px] px-5 min-w-[180px] text-left">
-                  Тестийн нэр
+              <tr className="text-label-caption font-medium text-[14px] leading-4.5">
+                <th className="w-1/6 py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Тестийн нэр</span>
+                    <ChevronDown size={16} />
+                  </div>
                 </th>
-                <th className="py-[15px] px-5 min-w-40 text-left">Төлөв</th>
-                <th className="py-[15px] px-5 min-w-40 text-left">
-                  Эхлэх оноо
+                <th className="w-1/7   py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Төлөв</span>
+                    <ChevronDown size={16} />
+                  </div>
                 </th>
-                <th className="py-[15px] px-5 min-w-40 text-left">
-                  Дуусах оноо
+                <th className="w-1/6 py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Эхлэх оноо</span>
+                    <ChevronDown size={16} />
+                  </div>
                 </th>
-                <th className="py-[15px] px-5 min-w-40 text-left">
-                  Асуултын оноо
+                <th className="w-1/6 py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Дуусах оноо</span>
+                    <ChevronDown size={16} />
+                  </div>
                 </th>
-                <th className="py-[15px] px-5 min-w-40 text-left">Хугацаа</th>
-                <th className="py-[15px] px-5 min-w-[100px] text-left">
-                  Үйлдэл
+                <th className="w-1/6 py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Асуултын оноо</span>
+                    <ChevronDown size={16} />
+                  </div>
                 </th>
+                <th className="w-1/6 py-3.75 px-5">
+                  <div className="flex items-center justify-between">
+                    <span>Хугацаа</span>
+                    <ChevronDown size={16} />
+                  </div>
+                </th>
+                <th className="py-3.75 px-5">Үйлдэл</th>
               </tr>
             </thead>
 
@@ -223,66 +253,63 @@ const ExamTab = ({ classroomId }: Types) => {
                 examList.list.map((item: ExamDetailType) => (
                   <tr
                     key={item.id}
-                    className="border-b border-background hover:bg-accent dark:hover:accent"
+                    className="border-b border-background hover:bg-accent dark:hover:text-accent-foreground"
                   >
                     <td
-                      className="py-[15px] px-5 min-w-[180px] text-left hover:text-primary cursor-pointer hover:underline"
+                      className="py-3.75 px-5 min-w-45 text-left hover:text-primary cursor-pointer hover:underline"
                       onClick={() => handleExamClick(item)}
                     >
                       {item.name}
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
+                    <td className="py-3.75 px-5 text-left">
                       {item.status === "INACTIVE" && (
                         <span className="bg-[#D8EEFB] text-[#00A5E3] border border-[#00A5E3] px-3.5 py-1 rounded-full text-[12px]">
                           Идэвхгүй
                         </span>
                       )}
                       {item.status === "ACTIVE" && (
-                        <span className="bg-[#DBF4E6] text-[#78D5AA] border border-[#78D5AA] px-3.5 py-1 rounded-full text-[12px]">
+                        <span className="bg-positive/12 text-positive border border-positive px-3.5 py-1 rounded-full text-[12px]">
                           Идэвхтэй
                         </span>
                       )}
                       {item.status === "CLOSED" && (
-                        <span className="bg-[#E5D6D5] text-[#E59698] border border-[#E59698] px-3.5 py-1 rounded-full text-[12px]">
+                        <span className="bg-negative/12 text-negative border border-negative px-3.5 py-1 rounded-full text-[12px]">
                           Дууссан
                         </span>
                       )}
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
-                      <div className="flex items-center gap-1">
-                        <DateIcon />
-                        <p>{formatDate(item.startDate)}</p>
+                    <td className="py-3.75 px-5 text-left">
+                      <div className="flex items-center gap-2.5">
+                        <DateIcon className="size-4 text-label-caption" />
+                        <p className="text-sm">{formatDate(item.startDate)}</p>
                       </div>
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
-                      <div className="flex items-center gap-1">
-                        <DateIcon />
+                    <td className="py-3.75 px-5 text-left">
+                      <div className="flex items-center gap-2.5">
+                        <DateIcon className="size-4 text-label-caption" />
                         {formatDate(item.finishDate)}
                       </div>
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
-                      <div className="flex items-center gap-1">
-                        <BookQueue />
+                    <td className="py-3.75 px-5 text-left">
+                      <div className="flex items-center gap-2.5">
+                        <BookQueue className="size-4 text-label-caption" />
                         {item.questionCount} Асуулт
                       </div>
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
-                      <div className="flex items-center gap-1">
-                        <TimeIcon />
+                    <td className="py-3.75 px-5 text-left">
+                      <div className="flex items-center gap-2.5">
+                        <TimeIcon className="size-4 text-label-caption" />
                         {item.duration} Минут
                       </div>
                     </td>
 
-                    <td className="py-[15px] px-5 text-left">
-                      <button
-                        title="more"
-                        className="text-access0 hover:text-black"
-                      >
+                    <td className="py-3.75 px-5 text-left">
+                      <button className="text-label-caption hover:text-black dark:hover:text-white cursor-pointer hover:bg-background-secondary px-3.75 py-2.5 rounded-[10px] active:bg-background-secondary focus:outline-none">
                         <MenuSidebar />
                       </button>
                     </td>

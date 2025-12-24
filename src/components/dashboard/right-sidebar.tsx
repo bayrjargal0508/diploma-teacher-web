@@ -81,7 +81,7 @@ const RightSidebar = ({
   }
 
   return (
-    <aside className="w-[280px] min-h-screen rounded-[10px] bg-background px-4 py-5 flex flex-col gap-6 text-sm">
+    <aside className="w-[300px] rounded-[10px] bg-background px-4 py-5 flex flex-col gap-6 text-sm min-h-screen">
       <div className="flex gap-2.5 items-center">
         <SidebarTrigger />
         <p className="subTitle">Сүүлд авсан шалгалт</p>

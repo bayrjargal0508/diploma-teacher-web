@@ -14,7 +14,7 @@ export const StudentTab = ({
   getStudentData,
 }: StudentTabProps) => {
   return (
-    <div className="flex flex-col gap-6 h-screen">
+    <div className="flex flex-col gap-6 min-h-screen">
       {pendingstudentlist?.list && pendingstudentlist.list.length > 0 && (
         <PendingStudents
           pendingstudentlist={pendingstudentlist}
